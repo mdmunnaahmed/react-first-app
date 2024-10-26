@@ -16,47 +16,49 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }) {
-  const [loading, setLoading] = useState(true);
-  const [currentUser, setCurrentUser] = useState();
+  const [loading, setLoading] = useState(true); // Set loading to true initially
+  const [currentUser, setCurrentUser] = useState(null);
+
+  const auth = getAuth();
 
   useEffect(() => {
-    const auth = getAuth();
-    const unsubs = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
       setLoading(false);
     });
-    return unsubs;
-  }, []);
+    return unsubscribe; // Unsubscribes to avoid memory leaks
+  }, [auth]);
 
-  // sign up func
+  // Sign up function
   async function signup(email, password, username) {
-    const auth = getAuth();
-    await createUserWithEmailAndPassword(auth, email, password);
-
-    // update profile
-    await updateProfile(auth.currentUser, {
-      displayName: username,
-    });
-
-    const user = auth.currentUser;
-    setCurrentUser({
-      ...user,
-    });
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      await updateProfile(auth.currentUser, { displayName: username });
+      setCurrentUser(auth.currentUser); // Update user with displayName
+    } catch (error) {
+      console.error("Signup Error:", error.message); // Handle errors
+      throw error; // Optional: Rethrow for handling in components
+    }
   }
 
-  // login func
-  function login(email, password) {
-    const auth = getAuth();
-    return signInWithEmailAndPassword(auth, email, password);
+  // Login function
+  async function login(email, password) {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      setCurrentUser(auth.currentUser);
+    } catch (error) {
+      console.error("Login Error:", error.message);
+      throw error;
+    }
   }
 
-  //logout
+  // Logout function
   function logout() {
-    const auth = getAuth();
     return signOut(auth);
   }
 
-  let value = {
+  // Ensure value is included and not commented out
+  const value = {
     currentUser,
     signup,
     login,

@@ -243,3 +243,17 @@ h4 {
     grid-template-columns: 1fr;
   }
 }
+
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 0.5s forwards; /* Duration of 0.5 seconds */
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

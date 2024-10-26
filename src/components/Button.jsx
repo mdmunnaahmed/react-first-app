@@ -1,8 +1,8 @@
 const Button = ({ className, children }) => {
   return (
-    <div>
+    <button style={{ padding: "0", background: "transparent", border: "none" }}>
       <div className={`${className} button`}>{children}</div>
-    </div>
+    </button>
   );
 };
 
