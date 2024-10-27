@@ -44,7 +44,7 @@ const Videos = () => {
           loader={<h4>Loading more videos...</h4>}
         >
           {showVideos.map((video) => (
-            <Link to="/" key={video.youtubeID}>
+            <Link to={`/quiz/${video.youtubeID}`} key={video.youtubeID}>
               <div className="fade-in">
                 {" "}
                 {/* Apply fade-in class here */}
